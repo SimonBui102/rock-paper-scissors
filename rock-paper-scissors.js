@@ -1,4 +1,41 @@
 
+
+let playerPoint=0;
+let computerPoint=0;
+
+const playerMessage = document.querySelector("#playerPoint");
+const computerMessage = document.querySelector("#computerPoint");
+const roundMessage = document.querySelector("#roundMessage");
+
+const rockButton = document.querySelector("#rockButton");
+const paperButton = document.querySelector("#paperButton");
+const scissorsButton = document.querySelector("#scissorsButton");
+
+rockButton.addEventListener("click",() =>handleClick("Rock"));
+
+paperButton.addEventListener("click",()=>handleClick("Paper"));
+
+scissorsButton.addEventListener("click",() =>handleClick("Scissors"));
+
+function handleClick(playerChoice){
+
+
+
+    let computerChoice = getComputerChoice();
+
+    let roundWinner=playRound(playerChoice, computerChoice);
+    
+    updateRoundMessage(roundWinner,playerChoice,computerChoice);
+
+    if(isGameOver()){
+        alert(finalMessage());
+        resetGame();
+
+    }                                                                                                                                                                               
+    
+
+}
+
 function getComputerChoice(){
 
     let computerChoice;
@@ -21,86 +58,99 @@ function getComputerChoice(){
 
 }
 
-function playRound(playerSelection, computerSelection){
+function playRound(playerChoice,computerChoice){
 
-    let result;
+    if(
+        (playerChoice.toLowerCase()=="rock" && computerChoice.toLowerCase()=="scissors")||
+        (playerChoice.toLowerCase()=="paper" && computerChoice.toLowerCase()=="rock")||
+        (playerChoice.toLowerCase()=="scissors" && computerChoice.toLowerCase()=="paper")
 
-    if (playerSelection.toLowerCase()== "rock"){
+    ){
+        playerPoint++;
+        return "player";
+    }
+    else if(playerChoice.toLowerCase()== computerChoice.toLowerCase()){
 
-        if (computerSelection.toLowerCase() == "paper" ){
-
-            result= "You lose! Paper beats Rock";
-            return result;
-        } else if(computerSelection.toLowerCase() == "scissors"){
-
-            result= "You win! Rock beats Scissors";
-            return result;
-        } else {
-
-            return "It is a tie."
-
-        }
+        return "tie";
     }
 
-    else if(playerSelection.toLowerCase()== "paper"){
+    else{
+        computerPoint++;
+        return "computer";
+
+    }
+
+    
+
+
+}
+
+function updateRoundMessage(roundWinner,playerChoice,computerChoice){
+
+    let message;
+    let playerScore = `Player score: ${playerPoint}`;
+    let computerScore = `Computer score: ${computerPoint}`;
+
+    if (roundWinner == "player"){
+        message = `You win! ${playerChoice} beats ${computerChoice}`
         
-        if (computerSelection.toLowerCase() == "scissors" ){
+    }else if (roundWinner=="computer"){
+        message = `You lose! ${computerChoice} beats ${playerChoice}`
 
-            result= "You lose! Scissors beats Paper";
-            return result;
-        } else if(computerSelection.toLowerCase() == "rock"){
-
-            result= "You win! Paper beats Rock";
-            return result;
-        } else {
-
-            return "It is a tie."
-
-        }
-
+    } else if(roundWinner=="tie"){
+        message = `It is a tie.`
 
     }
-
-    else if(playerSelection.toLowerCase()== "scissors"){
-
-        if (computerSelection.toLowerCase() == "rock" ){
-
-            result= "You lose! Rock beats Scissors";
-            return result;
-        } else if(computerSelection.toLowerCase() == "paper"){
-
-            result= "You win! Scissors beats Paper";
-            return result;
-        } else {
-
-            return "It is a tie."
-
-        }
-
-
-
-
-    }
-
+    
+    roundMessage.textContent= message;
+    playerMessage.textContent= playerScore;
+    computerMessage.textContent= computerScore;
 
 
 
 }
 
-function playGame(){
-    const playerSelection = window.prompt("Rock, Paper or Scissors?", "Rock");
+function isGameOver(){
 
-    for (let i = 1; i <=5 ; i++){
 
-        const computerSelection = getComputerChoice();
-        console.log(playRound(playerSelection, computerSelection));
+    if(playerPoint == 5 || computerPoint == 5){
+
+        return true;
+    }else{
+
+        return false;
     }
 }
-playGame();
+
+function finalMessage(){
+    let finalMessage;
+
+    if(playerPoint==5){
+        finalMessage= `Player win!`
+
+    } else if(computerPoint==5){
+        finalMessage= `Computer win!`
+
+    }
+
+    return finalMessage;
+
+}
+
+function resetGame(){
+    playerPoint=0;
+    computerPoint=0;
+
+    let message='';
+    let playerScore = `Player score: ${playerPoint}`;
+    let computerScore = `Computer score: ${computerPoint}`;
+
+    roundMessage.textContent= message;
+    playerMessage.textContent= playerScore;
+    computerMessage.textContent= computerScore;
 
 
-
-
+}
 
 
 
